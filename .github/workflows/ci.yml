@@ -8,8 +8,10 @@ on:
 
 jobs:
   build:
+    name: Build (${{ matrix.os }}, Node ${{ matrix.node }})
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         node: [20, 22]
@@ -29,3 +31,13 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm build
+
+      # Verify the mcp-lite entry point is loadable
+      - name: Verify mcp-lite dist
+        run: node -e "import('./packages/mcp-lite/dist/server.js').then(() => console.log('OK'))"
+        shell: bash
+
+      # Verify core exports
+      - name: Verify core dist
+        run: node -e "import('./packages/core/dist/index.js').then(m => { if(!m.SessionManager) throw 'missing'; console.log('OK') })"
+        shell: bash
