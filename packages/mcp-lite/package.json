@@ -1,6 +1,6 @@
 {
   "name": "@shell-mcp/mcp-lite",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "MCP server for persistent shell sessions — zero config, one command. Works with Claude Desktop, Cursor, Windsurf, Zed, and any MCP client.",
   "type": "module",
   "license": "MIT",
