@@ -1,0 +1,37 @@
+{
+  "name": "@shell-mcp/mcp-full",
+  "version": "0.1.0",
+  "description": "MCP server adapter for shell-mcp Full mode (proxies to daemon over HTTP)",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psdlabs/shell-mcp.git",
+    "directory": "packages/mcp-full"
+  },
+  "homepage": "https://github.com/psdlabs/shell-mcp#readme",
+  "keywords": ["mcp", "shell", "daemon", "proxy"],
+  "main": "dist/server.js",
+  "types": "dist/server.d.ts",
+  "bin": {
+    "shell-mcp-full": "dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js"
+    }
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.24.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

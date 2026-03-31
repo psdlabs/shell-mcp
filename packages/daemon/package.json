@@ -1,0 +1,40 @@
+{
+  "name": "@shell-mcp/daemon",
+  "version": "0.1.0",
+  "description": "Long-lived shell session daemon for shell-mcp Full mode",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psdlabs/shell-mcp.git",
+    "directory": "packages/daemon"
+  },
+  "homepage": "https://github.com/psdlabs/shell-mcp#readme",
+  "keywords": ["mcp", "shell", "daemon"],
+  "main": "dist/app.js",
+  "types": "dist/app.d.ts",
+  "bin": {
+    "shell-daemon": "dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/app.d.ts",
+      "import": "./dist/app.js"
+    }
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@shell-mcp/core": "workspace:*",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

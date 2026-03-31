@@ -1,0 +1,50 @@
+{
+  "name": "@shell-mcp/mcp-lite",
+  "version": "0.1.0",
+  "description": "MCP server for persistent shell sessions — zero config, one command. Works with Claude Desktop, Cursor, Windsurf, Zed, and any MCP client.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psdlabs/shell-mcp.git",
+    "directory": "packages/mcp-lite"
+  },
+  "homepage": "https://github.com/psdlabs/shell-mcp#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "shell",
+    "terminal",
+    "claude",
+    "claude-desktop",
+    "cursor",
+    "windsurf",
+    "ai",
+    "llm",
+    "persistent-session"
+  ],
+  "main": "dist/server.js",
+  "types": "dist/server.d.ts",
+  "bin": {
+    "shell-mcp-lite": "dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js"
+    }
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@shell-mcp/core": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.24.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

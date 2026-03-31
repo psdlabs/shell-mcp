@@ -1,0 +1,36 @@
+{
+  "name": "@shell-mcp/core",
+  "version": "0.1.0",
+  "description": "Core session management, safety guardrails, and audit logging for shell-mcp",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psdlabs/shell-mcp.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/psdlabs/shell-mcp#readme",
+  "keywords": ["mcp", "shell", "terminal", "session", "pty", "cli"],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "strip-ansi": "^7.1.0"
+  },
+  "optionalDependencies": {
+    "node-pty": "^1.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

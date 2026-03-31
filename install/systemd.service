@@ -1,0 +1,13 @@
+[Unit]
+Description=shell-mcp daemon — persistent PTY sessions for MCP clients
+After=network.target
+
+[Service]
+Type=simple
+ExecStart={{NODE_PATH}} {{DAEMON_ENTRY}}
+Environment=SHELL_MCP_PORT={{PORT}}
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
