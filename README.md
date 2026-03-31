@@ -1,5 +1,11 @@
 # shell-mcp
 
+[![CI](https://github.com/psdlabs/shell-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/psdlabs/shell-mcp/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-green.svg)](https://nodejs.org/)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux%20%7C%20Windows-blue.svg)]()
+[![MCP](https://img.shields.io/badge/MCP-Compatible-purple.svg)](https://modelcontextprotocol.io)
+
 MCP server that gives AI clients (Claude Desktop, Cursor, Windsurf, Zed, Cline) persistent shell access with safety guardrails.
 
 **One line to install. Zero config. Sessions persist across commands.**
