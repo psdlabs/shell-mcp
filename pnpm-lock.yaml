@@ -29,12 +29,13 @@ importers:
 
   packages/core:
     dependencies:
-      node-pty:
-        specifier: ^1.1.0
-        version: 1.1.0
       strip-ansi:
         specifier: ^7.1.0
         version: 7.2.0
+    optionalDependencies:
+      node-pty:
+        specifier: ^1.1.0
+        version: 1.1.0
 
   packages/daemon:
     dependencies:
@@ -1348,11 +1349,13 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  node-addon-api@7.1.1: {}
+  node-addon-api@7.1.1:
+    optional: true
 
   node-pty@1.1.0:
     dependencies:
       node-addon-api: 7.1.1
+    optional: true
 
   object-assign@4.1.1: {}
 
