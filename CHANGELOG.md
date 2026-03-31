@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 (2026-03-31)
+
+### Features
+
+- **One-liner install**: `npx -y @shell-mcp/mcp-lite --init` auto-detects Claude Desktop, Cursor, and Windsurf, writes config for you
+- Auto-detects installed MCP clients by checking known config paths
+- Skips clients that already have shell-mcp configured
+
 ## 0.1.0 (2026-03-31)
 
 Initial release.

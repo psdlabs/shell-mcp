@@ -12,9 +12,36 @@ MCP server that gives AI clients (Claude Desktop, Cursor, Windsurf, Zed, Cline) 
 
 ## Quick Start
 
-### Claude Desktop
+```bash
+npx -y @shell-mcp/mcp-lite --init
+```
 
-Add to your `claude_desktop_config.json`:
+That's it. It auto-detects your MCP clients and configures them:
+
+```
+  shell-mcp — init
+  ─────────────────
+
+  Claude Desktop
+    + Added shell-mcp
+    ~/Library/Application Support/Claude/claude_desktop_config.json
+
+  Cursor
+    + Added shell-mcp
+    ~/.cursor/mcp.json
+
+  Windsurf
+    + Added shell-mcp
+    ~/.windsurf/mcp.json
+
+  Restart Claude Desktop and Cursor and Windsurf to activate.
+```
+
+Restart your client. Done.
+
+### Manual Setup
+
+If you prefer, add this to your MCP client config directly:
 
 ```json
 {
@@ -27,26 +54,11 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 
-Config file location:
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-
-Restart Claude Desktop. Done.
-
-### Cursor / Windsurf
-
-Add to `.cursor/mcp.json` or `.windsurf/mcp.json` in your project:
-
-```json
-{
-  "mcpServers": {
-    "shell-mcp": {
-      "command": "npx",
-      "args": ["-y", "@shell-mcp/mcp-lite"]
-    }
-  }
-}
-```
+Config file locations:
+- **Claude Desktop (macOS)**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Claude Desktop (Windows)**: `%APPDATA%\Claude\claude_desktop_config.json`
+- **Cursor**: `~/.cursor/mcp.json`
+- **Windsurf**: `~/.windsurf/mcp.json`
 
 ## What It Does
 

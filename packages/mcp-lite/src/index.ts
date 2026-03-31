@@ -1,5 +1,12 @@
 #!/usr/bin/env node
 
+// Handle --init before importing heavy deps
+if (process.argv.includes("--init") || process.argv.includes("init")) {
+  const { runInit } = await import("./init.js");
+  runInit();
+  process.exit(0);
+}
+
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { SessionManager } from "@shell-mcp/core";
 import type { SafetyConfig, AuditConfig } from "@shell-mcp/core";

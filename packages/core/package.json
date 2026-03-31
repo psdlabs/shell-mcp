@@ -1,6 +1,6 @@
 {
   "name": "@shell-mcp/core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Core session management, safety guardrails, and audit logging for shell-mcp",
   "type": "module",
   "license": "MIT",
