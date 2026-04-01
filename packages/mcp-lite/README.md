@@ -29,14 +29,13 @@ Add to your MCP client config:
 
 ## What you get
 
-**14 tools** — shell, files, git, processes, audit:
+**5 tools** — lean by design:
 
-- **`run_command`** — Run any shell command with persistent state (cd, env vars carry over)
-- **`write_file`** · **`read_file`** · **`list_dir`** — File operations without shell quoting issues
-- **`git_status`** · **`git_log`** · **`git_diff`** — Structured git output
-- **`list_processes`** · **`kill_process`** — Process management
-- **`new_session`** · **`list_sessions`** · **`kill_session`** — Parallel sessions
-- **`get_audit_log`** · **`get_safety_config`** — Full transparency
+- **`run_command`** — The workhorse. Run any command with persistent state. Git, npm, ls, curl — anything.
+- **`write_file`** — Create/write files reliably (shell can't handle multiline content well)
+- **`read_file`** — Read files without encoding issues
+- **`get_audit_log`** — View command history
+- **`get_safety_config`** — View safety rules (read-only)
 
 ## Safety built in
 

@@ -71,18 +71,19 @@ Restart your AI client. Your AI now has a terminal.
 
 ## What your AI gets
 
-### 14 tools, zero setup
+### 5 tools. That's all it needs.
 
-| Category | Tools | What they do |
-|----------|-------|-------------|
-| **Shell** | `run_command` | Run any command. State persists — `cd`, env vars, `nvm use` all carry over |
-| | `new_session` · `list_sessions` · `kill_session` | Multiple parallel shell sessions |
-| **Files** | `write_file` · `read_file` · `list_dir` | Create, read, and browse files without shell quoting headaches |
-| **Git** | `git_status` · `git_log` · `git_diff` | Git operations with clean, structured output |
-| **Process** | `list_processes` · `kill_process` | See what's running, stop what shouldn't be |
-| **Safety** | `get_audit_log` · `get_safety_config` | Full transparency — every command is logged |
+| Tool | What it does |
+|------|-------------|
+| `run_command` | **The workhorse.** Run any shell command — git, npm, ls, curl, make, docker, anything. State persists between calls (cd, env vars, nvm use carry over). Parallel sessions created on demand. |
+| `write_file` | Create or write files. Handles any content, any size, creates directories. Shell can't do this reliably. |
+| `read_file` | Read file contents. Cleaner than `cat` — no encoding issues, no binary corruption. |
+| `get_audit_log` | View command history. Every command is logged — your AI can review what it ran. |
+| `get_safety_config` | View active safety rules. Read-only — the AI can't weaken its own guardrails. |
 
-Your AI doesn't need to set anything up. `run_command` auto-creates a session on first use.
+**Why only 5?** Your AI already knows `git status`, `ls`, `ps`, `kill`. It doesn't need wrapper tools for things the shell already does. We only add tools where the shell genuinely can't do the job.
+
+`run_command` auto-creates a session on first use. No setup needed.
 
 ---
 
