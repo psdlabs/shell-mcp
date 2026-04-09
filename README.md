@@ -42,7 +42,7 @@
 
 ## The Problem
 
-You're using Claude Desktop (or Cursor, Windsurf, etc.) and ask your AI to:
+You're using Claude Desktop and ask your AI to:
 
 - "Run my tests"
 - "Install that package"
