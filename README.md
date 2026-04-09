@@ -1,5 +1,4 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/psdlabs/shell-mcp/main/assets/logo.png" alt="shell-mcp" width="120">
   <h1 align="center">shell-mcp</h1>
   <p align="center"><b>Give your AI a real terminal. One command. Zero config.</b></p>
 </p>
@@ -31,12 +30,11 @@
 
 ## Demo
 
-<!-- Replace with your recorded GIF -->
 <p align="center">
-  <img src="https://raw.githubusercontent.com/psdlabs/shell-mcp/main/assets/demo.gif" alt="shell-mcp demo" width="700">
+  <img src="https://raw.githubusercontent.com/psdlabs/shell-mcp/main/assets/shell-mcp.JPG" alt="shell-mcp in action — Claude Desktop reading files, running commands, and creating a visual expense chart" width="700">
 </p>
 
-<p align="center"><i>Ask your AI to run commands, install packages, commit code — it just works.</i></p>
+<p align="center"><i>Claude Desktop using shell-mcp to read files, analyze data, and generate a chart — all through natural conversation.</i></p>
 
 ---
 
