@@ -4,6 +4,11 @@
   "description": "MCP server for persistent shell sessions — zero config, one command. Works with Claude Desktop, Cursor, Windsurf, Zed, and any MCP client.",
   "type": "module",
   "license": "MIT",
+  "author": {
+    "name": "psdlabs",
+    "email": "prasanthsd44@gmail.com",
+    "url": "https://www.linkedin.com/in/prasanthsd"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/psdlabs/shell-mcp.git",

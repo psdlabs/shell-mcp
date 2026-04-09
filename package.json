@@ -4,6 +4,11 @@
   "type": "module",
   "description": "MCP server giving any AI client persistent shell access via named sessions",
   "license": "MIT",
+  "author": {
+    "name": "psdlabs",
+    "email": "prasanthsd44@gmail.com",
+    "url": "https://www.linkedin.com/in/prasanthsd"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/psdlabs/shell-mcp.git"

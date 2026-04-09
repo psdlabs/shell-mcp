@@ -4,6 +4,11 @@
   "description": "Core session management, safety guardrails, and audit logging for shell-mcp",
   "type": "module",
   "license": "MIT",
+  "author": {
+    "name": "psdlabs",
+    "email": "prasanthsd44@gmail.com",
+    "url": "https://www.linkedin.com/in/prasanthsd"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/psdlabs/shell-mcp.git",

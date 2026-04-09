@@ -1,109 +1,139 @@
 <p align="center">
+  <img src="https://raw.githubusercontent.com/psdlabs/shell-mcp/main/assets/logo.png" alt="shell-mcp" width="120">
   <h1 align="center">shell-mcp</h1>
-  <p align="center">Give your AI a real terminal. One command. Zero config.</p>
+  <p align="center"><b>Give your AI a real terminal. One command. Zero config.</b></p>
 </p>
 
 <p align="center">
   <a href="https://github.com/psdlabs/shell-mcp/actions/workflows/ci.yml"><img src="https://github.com/psdlabs/shell-mcp/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://www.npmjs.com/package/@shell-mcp/mcp-lite"><img src="https://img.shields.io/npm/v/@shell-mcp/mcp-lite.svg?color=blue" alt="npm"></a>
+  <a href="https://www.npmjs.com/package/@shell-mcp/mcp-lite"><img src="https://img.shields.io/npm/v/@shell-mcp/mcp-lite.svg?color=blue" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/@shell-mcp/mcp-lite"><img src="https://img.shields.io/npm/dm/@shell-mcp/mcp-lite.svg?color=green" alt="downloads"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-%3E%3D20-green.svg" alt="Node.js"></a>
   <a href="https://modelcontextprotocol.io"><img src="https://img.shields.io/badge/MCP-Compatible-purple.svg" alt="MCP"></a>
 </p>
 
 <p align="center">
-  <b>Claude Desktop</b> · <b>Cursor</b> · <b>Windsurf</b> · <b>Zed</b> · <b>Cline</b> · any MCP client
+  Works with <b>Claude Desktop</b> · <b>Cursor</b> · <b>Windsurf</b> · <b>Zed</b> · <b>Cline</b> · any MCP client
 </p>
 
 ---
 
-## Why?
+## TL;DR
 
-Your AI assistant can write code — but it can't **run** it. No terminal access means no `npm install`, no `git commit`, no test runs, no builds. You end up copy-pasting commands back and forth.
-
-**shell-mcp fixes that.** It gives any MCP-compatible AI client a persistent terminal with safety guardrails. Your AI can run commands, read output, and keep going — just like a developer would.
+> Your AI can write code but can't run it. **shell-mcp** gives it a terminal.
+>
+> ```bash
+> npx -y @shell-mcp/mcp-lite --init
+> ```
+> Restart your AI app. Done. Your AI can now run commands, install packages, use git, start servers, run tests — everything you do in a terminal.
 
 ---
 
-## Install in 10 seconds
+## Demo
+
+<!-- Replace with your recorded GIF -->
+<p align="center">
+  <img src="https://raw.githubusercontent.com/psdlabs/shell-mcp/main/assets/demo.gif" alt="shell-mcp demo" width="700">
+</p>
+
+<p align="center"><i>Ask your AI to run commands, install packages, commit code — it just works.</i></p>
+
+---
+
+## The Problem
+
+You're using Claude Desktop (or Cursor, Windsurf, etc.) and ask your AI to:
+
+- "Run my tests"
+- "Install that package"
+- "Check the git status"
+- "Start the dev server"
+
+**It can't.** It has no terminal. You end up copy-pasting commands back and forth like it's 2005.
+
+## The Fix
 
 ```bash
 npx -y @shell-mcp/mcp-lite --init
 ```
 
-That's it. No config files to edit. No JSON to copy-paste. It auto-detects your installed clients and configures them:
+That's literally it. This one command:
+
+1. Auto-detects which AI apps you have installed
+2. Configures them automatically
+3. No JSON to edit, no config files to find
+
+Just restart your AI app. It now has a terminal.
 
 ```
-  shell-mcp — init
-  ─────────────────
+  shell-mcp -- init
+  -----------------
 
-  Claude Desktop
-    + Added shell-mcp
-    ~/Library/Application Support/Claude/claude_desktop_config.json
-
-  Cursor
-    + Added shell-mcp
-    ~/.cursor/mcp.json
-
-  Windsurf
-    + Added shell-mcp
-    ~/.windsurf/mcp.json
+  Claude Desktop    + Added
+  Cursor            + Added
+  Windsurf          + Added
 
   Restart your clients to activate.
 ```
 
-Restart your AI client. Your AI now has a terminal.
+---
 
-> **Already know what you're doing?** Add this to your MCP config manually:
-> ```json
-> {
->   "mcpServers": {
->     "shell-mcp": {
->       "command": "npx",
->       "args": ["-y", "@shell-mcp/mcp-lite"]
->     }
->   }
-> }
-> ```
+## What can your AI do now?
+
+Anything you can do in a terminal:
+
+```
+"Run npm install"                    ✓
+"Start the dev server"               ✓
+"Run the test suite"                 ✓
+"Check git status and commit"        ✓
+"List all running processes"         ✓
+"Create a new React project"         ✓
+"Build and deploy"                   ✓
+"SSH into the server" (if you want)  ✓
+```
+
+State persists between commands — `cd`, environment variables, `nvm use`, `conda activate` all carry over. Just like a real terminal.
 
 ---
 
-## What your AI gets
+## 5 tools. That's all it needs.
 
-### 5 tools. That's all it needs.
+Most MCP servers give AI 20+ tools. We give it 5. Here's why that's better.
 
-| Tool | What it does |
-|------|-------------|
-| `run_command` | **The workhorse.** Run any shell command — git, npm, ls, curl, make, docker, anything. State persists between calls (cd, env vars, nvm use carry over). Parallel sessions created on demand. |
-| `write_file` | Create or write files. Handles any content, any size, creates directories. Shell can't do this reliably. |
-| `read_file` | Read file contents. Cleaner than `cat` — no encoding issues, no binary corruption. |
-| `get_audit_log` | View command history. Every command is logged — your AI can review what it ran. |
-| `get_safety_config` | View active safety rules. Read-only — the AI can't weaken its own guardrails. |
+| Tool | Why it exists |
+|------|--------------|
+| **`run_command`** | The workhorse. Runs any shell command — git, npm, curl, docker, make, anything. Your AI already knows how to use a terminal. |
+| **`write_file`** | Shell is terrible at writing files (quoting, escaping, multiline). This does it reliably. |
+| **`read_file`** | Reads files without encoding headaches. Cleaner than `cat`. |
+| **`get_audit_log`** | Every command is logged. Your AI can review what happened. |
+| **`get_safety_config`** | Shows active safety rules. Read-only — AI can't change them. |
 
-**Why only 5?** Your AI already knows `git status`, `ls`, `ps`, `kill`. It doesn't need wrapper tools for things the shell already does. We only add tools where the shell genuinely can't do the job.
-
-`run_command` auto-creates a session on first use. No setup needed.
+**Why not more?** Your AI already knows `git status`, `ls -la`, `ps aux`, `kill`. Wrapping them in custom tools adds complexity without value. Give it a terminal and get out of the way.
 
 ---
 
-## Built-in safety
+## Safety first
 
-Commands are checked **before** they execute. Dangerous patterns never reach the shell.
+Your AI has a terminal, but it's not unsupervised. Commands are checked **before** they execute.
 
+### Blocked (never runs)
 ```
-✗ BLOCKED — never runs
-  rm -rf /          ·  DROP DATABASE    ·  curl ... | bash
-  format C:         ·  dd of=/dev/sda   ·  :(){ :|:& };:
-
-⚠ WARNING — runs with a flag
-  sudo ...          ·  rm -rf           ·  git push --force
-  kill -9           ·  shutdown         ·  chmod 777
+rm -rf /       ·  DROP DATABASE     ·  curl ... | bash
+format C:      ·  dd of=/dev/sda    ·  :(){ :|:& };:
 ```
 
-Every command — blocked or executed — is logged to an audit trail your AI can inspect.
+### Warned (runs with a flag)
+```
+sudo ...       ·  rm -rf            ·  git push --force
+kill -9        ·  shutdown          ·  chmod 777
+```
 
-### Customize rules
+Every command — blocked or executed — is logged to `~/.shell-mcp/logs/audit.jsonl`.
+
+### Lock it down
+
+Want to restrict what your AI can run? Use allowlists:
 
 ```json
 {
@@ -112,7 +142,6 @@ Every command — blocked or executed — is logged to an audit trail your AI ca
       "command": "npx",
       "args": ["-y", "@shell-mcp/mcp-lite"],
       "env": {
-        "SHELL_MCP_BLOCKLIST": "docker rm,docker rmi",
         "SHELL_MCP_ALLOWLIST": "npm.*,git.*,node.*",
         "SHELL_MCP_DEFAULT_DENY": "true"
       }
@@ -121,123 +150,163 @@ Every command — blocked or executed — is logged to an audit trail your AI ca
 }
 ```
 
-Set `DEFAULT_DENY` to `true` and only allowlisted commands will run. Everything else is blocked.
+Now only `npm`, `git`, and `node` commands are allowed. Everything else is blocked.
 
 ---
 
 ## Smart timeout
 
-Long-running commands don't get killed mid-download.
+Other tools kill `npm install` after 30 seconds because of a fixed timeout. We don't.
 
 ```
-Traditional:  |── 30s fixed ──────────────────────| KILL
-              (npm install dies mid-download)
+Others:       |---- 30s fixed ---------| KILL (npm install dies mid-download)
 
-shell-mcp:    |─ 15s ─| reset |─ 15s ─| reset |─ 15s ─| done ✓
-                  ▲ output    ▲ output    ▲ output
+shell-mcp:    |-- 15s --| reset |-- 15s --| reset |-- 15s --| done
+                  ^ output    ^ output       ^ output
 ```
 
-The timeout resets every time output is produced. Commands only time out after **15 seconds of silence** or hitting the **5-minute absolute cap**.
+The timeout **resets every time output is produced**. Your command only dies after 15 seconds of complete silence or a 5-minute absolute cap.
 
 ---
 
-## Audit log
+## Works everywhere
 
-Every command is logged to `~/.shell-mcp/logs/audit.jsonl`:
+| Platform | Default Shell | Status |
+|----------|--------------|--------|
+| macOS | zsh | Supported |
+| Linux | bash | Supported |
+| Windows | PowerShell | Supported |
 
-```json
-{
-  "timestamp": "2026-03-31T10:00:00Z",
-  "sessionName": "default",
-  "command": "npm install",
-  "exitCode": 0,
-  "durationMs": 12340,
-  "cwd": "/home/user/project"
-}
-```
-
-Your AI can call `get_audit_log` to review what happened. Logs auto-rotate at 10MB.
-
-Disable with `SHELL_MCP_AUDIT=false`.
+Zero native dependencies. No build tools required. Just Node.js 20+.
 
 ---
 
-## Configuration
+## Configuration (all optional)
 
-All optional. Works out of the box with zero config.
+shell-mcp works out of the box. Customize only if you want to.
 
 | Variable | Default | What it does |
 |----------|---------|-------------|
-| `SHELL_MCP_CWD` | current directory | Starting working directory |
-| `SHELL_MCP_SHELL` | auto-detected | Force a specific shell (`bash`, `zsh`, `powershell.exe`) |
-| `SHELL_MCP_MAX_SESSIONS` | `10` | Max concurrent sessions |
-| `SHELL_MCP_TIMEOUT` | `1800000` | Session idle timeout in ms (30 min) |
+| `SHELL_MCP_CWD` | current dir | Starting directory for sessions |
+| `SHELL_MCP_SHELL` | auto-detect | Force a shell (`bash`, `zsh`, `powershell.exe`) |
+| `SHELL_MCP_MAX_SESSIONS` | `10` | Max parallel sessions |
 | `SHELL_MCP_BLOCKLIST` | built-in | Extra blocked patterns (comma-separated regex) |
-| `SHELL_MCP_ALLOWLIST` | — | Only allow matching commands (comma-separated regex) |
-| `SHELL_MCP_WARN_PATTERNS` | built-in | Extra warning patterns (comma-separated regex) |
+| `SHELL_MCP_ALLOWLIST` | none | Only allow these commands (comma-separated regex) |
 | `SHELL_MCP_DEFAULT_DENY` | `false` | Block everything not in allowlist |
 | `SHELL_MCP_AUDIT` | `true` | Enable/disable audit logging |
-| `SHELL_MCP_AUDIT_DIR` | `~/.shell-mcp/logs/` | Where audit logs are written |
+
+Pass them as environment variables in your MCP config:
+
+```json
+{
+  "mcpServers": {
+    "shell-mcp": {
+      "command": "npx",
+      "args": ["-y", "@shell-mcp/mcp-lite"],
+      "env": {
+        "SHELL_MCP_CWD": "/path/to/project",
+        "SHELL_MCP_SHELL": "bash"
+      }
+    }
+  }
+}
+```
 
 ---
 
-## How it works
+## Manual setup
+
+If `--init` doesn't detect your client, or you prefer to configure manually:
+
+<details>
+<summary><b>Claude Desktop</b></summary>
+
+Config file location:
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+- **Linux**: `~/.config/Claude/claude_desktop_config.json`
+
+Add this to the file:
+```json
+{
+  "mcpServers": {
+    "shell-mcp": {
+      "command": "npx",
+      "args": ["-y", "@shell-mcp/mcp-lite"]
+    }
+  }
+}
+```
+</details>
+
+<details>
+<summary><b>Cursor</b></summary>
+
+Config file: `~/.cursor/mcp.json`
+
+```json
+{
+  "mcpServers": {
+    "shell-mcp": {
+      "command": "npx",
+      "args": ["-y", "@shell-mcp/mcp-lite"]
+    }
+  }
+}
+```
+</details>
+
+<details>
+<summary><b>Windsurf</b></summary>
+
+Config file: `~/.windsurf/mcp.json`
+
+```json
+{
+  "mcpServers": {
+    "shell-mcp": {
+      "command": "npx",
+      "args": ["-y", "@shell-mcp/mcp-lite"]
+    }
+  }
+}
+```
+</details>
+
+---
+
+## How it works (for the curious)
 
 ```
-AI calls run_command("npm test")
-        │
-        ▼
-  Auto-create session (if needed)
-        │
-        ▼
-  Safety check ── BLOCKED? → return error, log it
-        │ OK
-        ▼
-  Execute in persistent shell
+You ask: "Run my tests"
+        |
+        v
+  AI calls run_command("npm test")
+        |
+        v
+  Safety check (blocked? warned? ok?)
+        |
+        v
+  Execute in persistent shell session
   (state carries over between commands)
-        │
-        ▼
-  Stream output with smart timeout
-        │
-        ▼
-  Log to audit trail → return result to AI
+        |
+        v
+  Smart timeout (auto-extends while output flows)
+        |
+        v
+  Log to audit trail --> return result to AI
+        |
+        v
+  AI reads output, decides what to do next
 ```
 
-Sessions use stdin/stdout pipes — **not** PTY. That means:
-- Zero native dependencies
-- No ANSI escape codes to strip
-- No build tools required
-- Works on **macOS**, **Linux**, and **Windows**
+No PTY. No native dependencies. Just clean stdin/stdout pipes.
 
 ---
 
-## Cross-platform
+## Contributing
 
-| Platform | Default Shell | Works? |
-|----------|--------------|--------|
-| macOS | zsh | ✓ |
-| Linux | bash | ✓ |
-| Windows | PowerShell | ✓ |
-
-Override with `SHELL_MCP_SHELL` if needed.
-
----
-
-## MCP client config locations
-
-| Client | Config path |
-|--------|------------|
-| Claude Desktop (macOS) | `~/Library/Application Support/Claude/claude_desktop_config.json` |
-| Claude Desktop (Windows) | `%APPDATA%\Claude\claude_desktop_config.json` |
-| Claude Desktop (Linux) | `~/.config/Claude/claude_desktop_config.json` |
-| Cursor | `~/.cursor/mcp.json` |
-| Windsurf | `~/.windsurf/mcp.json` |
-
-Or just run `npx -y @shell-mcp/mcp-lite --init` and let it handle this for you.
-
----
-
-## Development
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ```bash
 git clone https://github.com/psdlabs/shell-mcp.git
@@ -246,20 +315,64 @@ pnpm install
 pnpm build
 ```
 
-Run locally:
-```bash
-node packages/mcp-lite/dist/index.js
-```
-
-Architecture:
 ```
 packages/
-├── core/        — Session management, safety, audit (the engine)
-└── mcp-lite/    — MCP server (this is what users install)
+  core/        -- Session engine, safety, audit
+  mcp-lite/    -- MCP server (what users install)
 ```
+
+---
+
+## FAQ
+
+<details>
+<summary><b>Is this safe?</b></summary>
+
+Yes. Destructive commands are blocked before they execute. Every command is logged to an audit trail. You can lock it down further with allowlists and `DEFAULT_DENY` mode. The AI cannot modify safety rules — they're read-only.
+</details>
+
+<details>
+<summary><b>Does it work with [my AI client]?</b></summary>
+
+If your client supports MCP (Model Context Protocol), yes. The `--init` command auto-detects Claude Desktop, Cursor, and Windsurf. For others, add the JSON config manually.
+</details>
+
+<details>
+<summary><b>What if a command hangs?</b></summary>
+
+Smart timeout handles it. If a command produces no output for 15 seconds, it times out. There's also a 5-minute absolute cap. The AI gets a clear "TIMED OUT" status and can decide what to do.
+</details>
+
+<details>
+<summary><b>Can I use it for CI/CD?</b></summary>
+
+It's designed for interactive AI use, but there's nothing stopping you from using it in automation. Just configure the safety rules for your use case.
+</details>
+
+<details>
+<summary><b>Do I need to install anything besides Node.js?</b></summary>
+
+No. `npx` downloads and runs it automatically. You just need Node.js 20 or later.
+</details>
+
+---
+
+## Star History
+
+If this project helps you, consider giving it a star. It helps others find it.
+
+[![Star History Chart](https://api.star-history.com/svg?repos=psdlabs/shell-mcp&type=Date)](https://star-history.com/#psdlabs/shell-mcp&Date)
 
 ---
 
 ## License
 
-MIT — do whatever you want with it.
+MIT -- do whatever you want with it.
+
+---
+
+<p align="center">
+  Built by <a href="https://github.com/psdlabs"><b>psdlabs</b></a> · <a href="https://www.linkedin.com/in/prasanthsd">LinkedIn</a>
+  <br>
+  <a href="https://github.com/psdlabs/shell-mcp/issues">Report a bug</a> · <a href="https://github.com/psdlabs/shell-mcp/issues">Request a feature</a>
+</p>
