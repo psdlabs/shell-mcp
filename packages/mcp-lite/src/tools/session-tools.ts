@@ -69,15 +69,11 @@ Smart timeout: Long-running commands auto-extend while producing output. Only ti
     async (args) => {
       const sid = await getOrCreateSession(manager, args.session_id);
 
-      const outputChunks: string[] = [];
       const execOptions: ExecOptions = {
         timeoutMs: args.timeout_ms,
         smartTimeout: true,
         idleTimeoutMs: args.timeout_ms,
         maxTimeoutMs: 300000,
-        onOutput: (chunk: string) => {
-          outputChunks.push(chunk);
-        },
       };
 
       const result = await manager.exec(sid, args.command, execOptions);

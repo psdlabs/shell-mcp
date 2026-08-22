@@ -32,6 +32,8 @@ jobs:
 
       - run: pnpm build
 
+      - run: pnpm test
+
       # Verify the mcp-lite entry point is loadable
       - name: Verify mcp-lite dist
         run: node -e "import('./packages/mcp-lite/dist/server.js').then(() => console.log('OK'))"

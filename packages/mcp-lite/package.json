@@ -42,6 +42,7 @@
   "files": ["dist", "README.md", "LICENSE"],
   "scripts": {
     "build": "tsc",
+    "test": "pnpm --filter @shell-mcp/core run build && pnpm run build && node --test test/session-tools.test.mjs",
     "clean": "rm -rf dist"
   },
   "dependencies": {

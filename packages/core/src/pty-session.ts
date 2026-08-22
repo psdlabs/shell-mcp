@@ -6,6 +6,7 @@ import {
   generateSentinel,
   parseSentinelOutput,
 } from "./sentinel.js";
+import { terminateProcessTree } from "./process-tree.js";
 import type { ExecOptions, ExecResult, SessionInfo } from "./types.js";
 
 // Lazy-load node-pty with a helpful error message
@@ -34,7 +35,8 @@ interface PendingExec {
   resolve: (result: ExecResult) => void;
   reject: (err: Error) => void;
   startTime: number;
-  timeoutId: ReturnType<typeof setTimeout>;
+  idleTimeoutId: ReturnType<typeof setTimeout> | undefined;
+  maxTimeoutId: ReturnType<typeof setTimeout> | undefined;
   dataDispose: { dispose(): void };
 }
 
@@ -55,6 +57,7 @@ export class PtySession {
 
   private pty!: import("node-pty").IPty;
   private alive = true;
+  private terminationRequested = false;
   private lastActivity: Date;
   private cwd: string;
   private pendingExec: PendingExec | null = null;
@@ -127,6 +130,10 @@ export class PtySession {
     const opts: ExecOptions =
       typeof options === "number" ? { timeoutMs: options } : (options ?? {});
     const timeoutMs = opts.timeoutMs ?? 30000;
+    const smartTimeout =
+      typeof options !== "number" && opts.smartTimeout !== false;
+    const idleTimeoutMs = opts.idleTimeoutMs ?? 15000;
+    const maxTimeoutMs = opts.maxTimeoutMs ?? 300000;
     const onOutput = opts.onOutput;
 
     const sentinel = generateSentinel();
@@ -135,10 +142,67 @@ export class PtySession {
     return new Promise<ExecResult>((resolve, reject) => {
       const startTime = Date.now();
       let buffer = "";
+      let resolved = false;
+      let idleTimeoutId: ReturnType<typeof setTimeout> | undefined;
+      let maxTimeoutId: ReturnType<typeof setTimeout> | undefined;
+
+      const finish = (result: ExecResult, terminate = false) => {
+        if (resolved) return;
+        resolved = true;
+        if (terminate) {
+          this.kill();
+        } else {
+          this.completePending();
+        }
+        this.lastActivity = new Date();
+        if (!result.timedOut) this.cwd = result.cwd;
+        resolve(result);
+      };
+
+      const finishTimeout = (reason: string) => {
+        const partialOutput = cleanOutput(buffer);
+        finish(
+          {
+            output:
+              partialOutput +
+              `\n\n[${reason}]`,
+            exitCode: -1,
+            cwd: this.cwd,
+            durationMs: Date.now() - startTime,
+            timedOut: true,
+          },
+          true
+        );
+      };
+
+      const resetIdleTimer = () => {
+        clearTimeout(idleTimeoutId);
+        const ms = smartTimeout ? idleTimeoutMs : timeoutMs;
+        idleTimeoutId = setTimeout(() => {
+          const reason = smartTimeout
+            ? `IDLE TIMEOUT: No output for ${idleTimeoutMs}ms`
+            : `TIMEOUT: Command did not complete within ${timeoutMs}ms`;
+          finishTimeout(reason);
+        }, ms);
+        if (this.pendingExec) {
+          this.pendingExec.idleTimeoutId = idleTimeoutId;
+        }
+      };
+
+      if (smartTimeout) {
+        maxTimeoutId = setTimeout(() => {
+          finishTimeout(
+            `MAX TIMEOUT: Command exceeded absolute limit of ${maxTimeoutMs}ms`
+          );
+        }, maxTimeoutMs);
+      }
 
       const dataDispose = this.pty.onData((data: string) => {
+        if (resolved) return;
         buffer += data;
         if (onOutput) onOutput(data);
+
+        if (smartTimeout) resetIdleTimer();
 
         const result = parseSentinelOutput(
           cleanOutput(buffer),
@@ -146,10 +210,7 @@ export class PtySession {
           command
         );
         if (result) {
-          this.completePending();
-          this.cwd = result.cwd;
-          this.lastActivity = new Date();
-          resolve({
+          finish({
             output: result.output,
             exitCode: result.exitCode,
             cwd: result.cwd,
@@ -158,19 +219,6 @@ export class PtySession {
         }
       });
 
-      const timeoutId = setTimeout(() => {
-        const partialOutput = cleanOutput(buffer);
-        this.completePending();
-        this.lastActivity = new Date();
-        resolve({
-          output: partialOutput + "\n\n[TIMEOUT: Command did not complete within " + timeoutMs + "ms]",
-          exitCode: -1,
-          cwd: this.cwd,
-          durationMs: Date.now() - startTime,
-          timedOut: true,
-        });
-      }, timeoutMs);
-
       this.pendingExec = {
         sentinel,
         command,
@@ -178,9 +226,12 @@ export class PtySession {
         resolve,
         reject,
         startTime,
-        timeoutId,
+        idleTimeoutId,
+        maxTimeoutId,
         dataDispose,
       };
+
+      resetIdleTimer();
 
       // Write the sentinel command to the PTY
       const lineEnding = getShellType(this.shell) === "powershell" ? "\r\n" : "\n";
@@ -190,7 +241,8 @@ export class PtySession {
 
   private completePending(): void {
     if (this.pendingExec) {
-      clearTimeout(this.pendingExec.timeoutId);
+      clearTimeout(this.pendingExec.idleTimeoutId);
+      clearTimeout(this.pendingExec.maxTimeoutId);
       this.pendingExec.dataDispose.dispose();
       this.pendingExec = null;
     }
@@ -218,14 +270,15 @@ export class PtySession {
   }
 
   kill(): void {
+    if (this.terminationRequested) return;
+    this.terminationRequested = true;
     this.completePending();
-    if (this.alive) {
-      try {
-        this.pty.kill();
-      } catch {
-        // already dead
-      }
-      this.alive = false;
+    this.alive = false;
+    terminateProcessTree(this.pty?.pid ?? -1);
+    try {
+      this.pty?.kill();
+    } catch {
+      // already dead
     }
   }
 
