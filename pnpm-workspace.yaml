@@ -1,3 +1,5 @@
 packages:
   - 'packages/*'
   - 'cli'
+allowBuilds:
+  node-pty: true
