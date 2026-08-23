@@ -53,6 +53,7 @@ export function registerAuditTools(
             text: JSON.stringify(
               {
                 defaultDeny: config.defaultDeny,
+                failClosed: config.failClosed,
                 blockedPatterns: config.blocklist.length,
                 allowlistActive: config.allowlist !== null,
                 allowlistPatterns: config.allowlist?.length ?? 0,

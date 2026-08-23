@@ -112,7 +112,7 @@ export class SessionManager {
     const info = session.getInfo();
 
     // Safety check
-    const check = this.safety.check(command);
+    const check = this.safety.check(command, info.shell);
     if (!check.allowed) {
       this.audit.logBlocked(sessionId, info.name, command, check.reason!);
       return {

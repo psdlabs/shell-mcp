@@ -43,6 +43,8 @@ export interface SafetyConfig {
   warnPatterns?: string[];
   /** Block all commands by default (requires allowlist to permit anything). Default: false. */
   defaultDeny?: boolean;
+  /** Reject shell constructs whose execution cannot be safely inspected. Default: true. */
+  failClosed?: boolean;
 }
 
 export interface AuditConfig {

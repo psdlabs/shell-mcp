@@ -9,29 +9,9 @@ if (process.argv.includes("--init") || process.argv.includes("init")) {
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { SessionManager } from "@shell-mcp/core";
-import type { SafetyConfig, AuditConfig } from "@shell-mcp/core";
+import type { AuditConfig } from "@shell-mcp/core";
 import { createServer } from "./server.js";
-
-// Parse safety config from environment
-function parseSafetyConfig(): SafetyConfig | undefined {
-  const blocklist = process.env.SHELL_MCP_BLOCKLIST;
-  const allowlist = process.env.SHELL_MCP_ALLOWLIST;
-  const warnPatterns = process.env.SHELL_MCP_WARN_PATTERNS;
-  const defaultDeny = process.env.SHELL_MCP_DEFAULT_DENY;
-
-  if (!blocklist && !allowlist && !warnPatterns && !defaultDeny) {
-    return undefined; // Use defaults
-  }
-
-  return {
-    blocklist: blocklist ? blocklist.split(",").map((s) => s.trim()) : undefined,
-    allowlist: allowlist ? allowlist.split(",").map((s) => s.trim()) : undefined,
-    warnPatterns: warnPatterns
-      ? warnPatterns.split(",").map((s) => s.trim())
-      : undefined,
-    defaultDeny: defaultDeny === "true",
-  };
-}
+import { parseSafetyConfig } from "./config.js";
 
 // Parse audit config from environment
 function parseAuditConfig(): AuditConfig | undefined {

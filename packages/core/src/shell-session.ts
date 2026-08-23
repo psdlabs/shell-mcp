@@ -1,6 +1,7 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { randomUUID } from "node:crypto";
-import { getDefaultShellArgs, getShellType } from "./platform.js";
+import { getDefaultShellArgs, getShellType, isWindows } from "./platform.js";
+import { terminateProcessTree } from "./process-tree.js";
 import type { ExecOptions, ExecResult, SessionInfo } from "./types.js";
 
 /**
@@ -28,6 +29,7 @@ export class ShellSession {
 
   private process: ChildProcess;
   private alive = true;
+  private terminationRequested = false;
   private lastActivity: Date;
   private cwd: string;
   private busy = false;
@@ -36,6 +38,7 @@ export class ShellSession {
   private stdoutBuffer = "";
   private stderrBuffer = "";
   private onStdout: ((data: string) => void) | null = null;
+  private onActivity: (() => void) | null = null;
 
   constructor(options: {
     name: string;
@@ -66,6 +69,7 @@ export class ShellSession {
       } as Record<string, string>,
       stdio: ["pipe", "pipe", "pipe"],
       shell: false,
+      detached: !isWindows(),
       windowsHide: true,
     });
 
@@ -73,12 +77,16 @@ export class ShellSession {
     this.process.stderr!.setEncoding("utf-8");
 
     this.process.stdout!.on("data", (data: string) => {
+      if (!this.alive) return;
       this.stdoutBuffer += data;
+      if (this.onActivity) this.onActivity();
       if (this.onStdout) this.onStdout(data);
     });
 
     this.process.stderr!.on("data", (data: string) => {
+      if (!this.alive) return;
       this.stderrBuffer += data;
+      if (this.onActivity) this.onActivity();
     });
 
     this.process.on("exit", () => {
@@ -153,8 +161,8 @@ export class ShellSession {
 
     return new Promise<ExecResult>((resolve) => {
       let resolved = false;
-      let idleTimer: ReturnType<typeof setTimeout>;
-      let maxTimer: ReturnType<typeof setTimeout>;
+      let idleTimer: ReturnType<typeof setTimeout> | undefined;
+      let maxTimer: ReturnType<typeof setTimeout> | undefined;
 
       const finish = (
         output: string,
@@ -166,6 +174,7 @@ export class ShellSession {
         resolved = true;
         this.busy = false;
         this.onStdout = null;
+        this.onActivity = null;
         clearTimeout(idleTimer);
         clearTimeout(maxTimer);
         this.lastActivity = new Date();
@@ -180,6 +189,7 @@ export class ShellSession {
       };
 
       const finishTimeout = (reason: string) => {
+        if (resolved) return;
         let output = this.stdoutBuffer.trim();
         const stderr = this.stderrBuffer.trim();
         if (stderr) {
@@ -187,6 +197,7 @@ export class ShellSession {
             ? `${output}\n\n[stderr]\n${stderr}`
             : `[stderr]\n${stderr}`;
         }
+        this.kill();
         finish(output + `\n\n[${reason}]`, -1, this.cwd, true);
       };
 
@@ -215,9 +226,6 @@ export class ShellSession {
         // Stream chunk to caller
         if (onOutput) onOutput(chunk);
 
-        // Reset idle timer on any output activity
-        resetIdleTimer();
-
         // Check for sentinel completion
         const result = this.parseSentinel(this.stdoutBuffer, sentinel);
         if (result) {
@@ -231,6 +239,7 @@ export class ShellSession {
           finish(output, result.exitCode, result.cwd);
         }
       };
+      this.onActivity = resetIdleTimer;
 
       // Start idle timer
       resetIdleTimer();
@@ -285,14 +294,10 @@ export class ShellSession {
   }
 
   kill(): void {
-    if (this.alive) {
-      try {
-        this.process.kill();
-      } catch {
-        // already dead
-      }
-      this.alive = false;
-    }
+    if (this.terminationRequested) return;
+    this.terminationRequested = true;
+    this.alive = false;
+    terminateProcessTree(this.process.pid ?? -1);
   }
 
   dispose(): void {

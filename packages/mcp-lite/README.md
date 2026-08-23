@@ -39,7 +39,10 @@ Restart your AI app. Done.
 
 ## Safety
 
-Destructive commands blocked automatically. Risky commands warned. Every command logged. Customize with `SHELL_MCP_BLOCKLIST`, `SHELL_MCP_ALLOWLIST`, `SHELL_MCP_DEFAULT_DENY`.
+Recognizable shell-level destructive commands blocked automatically. Risky
+commands warned. Every command logged. Customize with `SHELL_MCP_BLOCKLIST`,
+`SHELL_MCP_ALLOWLIST`, `SHELL_MCP_DEFAULT_DENY`, and
+`SHELL_MCP_SAFETY_FAIL_CLOSED`.
 
 ## Config (all optional)
 
@@ -50,7 +53,10 @@ Destructive commands blocked automatically. Risky commands warned. Every command
 | `SHELL_MCP_BLOCKLIST` | built-in | Extra blocked patterns |
 | `SHELL_MCP_ALLOWLIST` | none | Only allow these commands |
 | `SHELL_MCP_DEFAULT_DENY` | `false` | Block everything not allowlisted |
+| `SHELL_MCP_SAFETY_FAIL_CLOSED` | `true` | Reject shell constructs SafetyGuard cannot safely inspect (`true`/`1`); `false`/`0` weakens protection and invalid values fail startup |
 | `SHELL_MCP_AUDIT` | `true` | Enable audit logging |
+
+Fail-closed mode rejects POSIX parameter expansion, including argument values such as `"$HOME"`; set `SHELL_MCP_SAFETY_FAIL_CLOSED=false` to permit it and weaken safety checks.
 
 ## Cross-platform
 

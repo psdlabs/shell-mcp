@@ -191,7 +191,10 @@ shell-mcp works out of the box. Customize only if you want to.
 | `SHELL_MCP_BLOCKLIST` | built-in | Extra blocked patterns (comma-separated regex) |
 | `SHELL_MCP_ALLOWLIST` | none | Only allow these commands (comma-separated regex) |
 | `SHELL_MCP_DEFAULT_DENY` | `false` | Block everything not in allowlist |
+| `SHELL_MCP_SAFETY_FAIL_CLOSED` | `true` | Reject shell constructs SafetyGuard cannot safely inspect (`true`/`1`); `false`/`0` weakens protection and invalid values fail startup |
 | `SHELL_MCP_AUDIT` | `true` | Enable/disable audit logging |
+
+Fail-closed mode also rejects POSIX parameter expansion anywhere in a command, including arguments such as `"$HOME"`, because expanded values can hide executable arguments or destructive targets. Set `SHELL_MCP_SAFETY_FAIL_CLOSED=false` to permit these constructs and weaken safety checks.
 
 Pass them as environment variables in your MCP config:
 
@@ -326,7 +329,11 @@ packages/
 <details>
 <summary><b>Is this safe?</b></summary>
 
-Yes. Destructive commands are blocked before they execute. Every command is logged to an audit trail. You can lock it down further with allowlists and `DEFAULT_DENY` mode. The AI cannot modify safety rules — they're read-only.
+SafetyGuard blocks recognizable shell-level destructive patterns before
+execution. Every command is logged to an audit trail. Allowlists and
+`DEFAULT_DENY` add restrictions. This is not a sandbox: allowed programs and
+scripts can perform arbitrary operations internally. The AI cannot modify safety
+rules — they're read-only.
 </details>
 
 <details>
